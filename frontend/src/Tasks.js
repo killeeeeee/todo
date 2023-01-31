@@ -8,6 +8,7 @@ import initialTasks from './InitialTasks';
 
 function Tasks() {
   const [tasks, setTasks] = useState(initialTasks);
+  const [filter, setFilter] = useState("all");
 
   const TODO_BASE_URL = 'http://localhost:3000/todos';
 
@@ -80,14 +81,28 @@ function Tasks() {
     })
   }
 
+  const onFilterChanged = (e) => {
+    // console.log(e.target.value);
+    setFilter(e.target.value);
+  }
+
   return (
     <>
       <div className="Tasks">
-        <h1>Tasks</h1>
+        <h1>
+          <a href="https://www.dictionary.com/browse/task" target="_blank">TASK</a></h1>
+          style: 
+        show: <select name="filter" id="filter-select" onChange={onFilterChanged}>
+
+          <option value="all">all</option>
+          <option value="complete">complete</option>
+          <option value="incomplete">incomplete</option>
+        </select> {filter}
+
         <table>
           <thead>
             <tr>
-              <th>Todo ID</th>
+              <th>ID</th>
               <th>Title</th>
               <th>Completed</th>
               <th>Actions</th>
@@ -95,12 +110,43 @@ function Tasks() {
           </thead>
 
           <tbody>
-            {tasks.map((todo) => {
+            {tasks.filter(todo => {
+              if (filter === 'all') {
+                return true;
+              }
+              if (filter=== 'complete' && todo.completed) {
+                return true;
+              }
+              if (filter === 'incomplete' && todo.completed === false) {
+                return true;
+              }
+              return false;
+            }).map((todo) => {
               return <Todo key={todo.id} todo={todo} deleteTodo={deleteTodo} setTodoCompleted={setTodoCompleted} />
             })}
           </tbody>
         </table>
       </div>
+      <table>
+        <tbody>
+        <tr>
+            <th>Am I done yet </th>
+            <th>Am I done yet </th>
+        </tr>
+        <tr>
+            <td> Not Yet</td>
+            <td> Not Yet</td>
+        </tr>
+        <tr>
+            <td> Not Yet</td>
+            <td> Not Yet</td>
+        </tr>
+        <tr>
+            <td> Not Yet</td>
+            <td> Not Yet</td>
+        </tr>
+        </tbody>
+      </table>
 
       <div>
         <TodoForm addTodo={addTodo} />
